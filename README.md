@@ -1,4 +1,4 @@
-# TaskApp
+# Todolu
 
 A Flutter task manager for Android and iOS, for planning what to do today and across the week. Tasks can be due on a specific day or "sometime this week", and they can repeat and send reminders. Everything is stored on the device.
 
@@ -31,7 +31,7 @@ A Flutter task manager for Android and iOS, for planning what to do today and ac
 | State | `ChangeNotifier` and `InheritedNotifier` (built into Flutter, no extra package) |
 | Storage | SQLite via `sqflite` |
 | Notifications | `flutter_local_notifications` and `timezone` |
-| Testing | `flutter_test`, with `sqflite_common_ffi` to run SQLite on a computer |
+| Testing | `flutter_test` with `sqflite_common_ffi` for fast tests on a computer; `integration_test` for end-to-end tests on a real device |
 | CI | GitHub Actions (`flutter analyze` and `flutter test` on every push and pull request) |
 
 ## Architecture
@@ -71,8 +71,9 @@ Screens never talk to the database directly. Every change goes through `TaskStor
   - store behaviour, including reminder scheduling with a fake scheduler
   - widget tests that drive the real screens: adding, editing, deleting, ticking off and switching weeks
 - **Static analysis** with Flutter's recommended lint rules; the analyzer reports no issues.
-- **Continuous integration** runs the analyzer and every test on each push and pull request. Changes reach `main` only through pull requests that have passed CI.
-- **Tested on an Android 36 emulator.** The tests also caught a real crash before release: two "add" buttons conflicted during screen transitions.
+- **End-to-end tests** run the real app on an Android 36 emulator, with the real database and the real notification system. They add, tick off, edit and delete tasks, switch weeks, and restart the app to check that everything was saved. They also check that reminders are scheduled with Android and cancelled again. Testing caught a real crash before release: two "add" buttons conflicted during screen transitions.
+- **Continuous integration** runs the analyzer and the unit and widget tests on every push and pull request. All changes go through pull requests that must pass CI.
+- **Checks before merging**: the analyzer, the unit and widget tests and the end-to-end tests must all pass before a change is merged into `main`. A pull request template keeps this checklist.
 
 ## Privacy and security
 
@@ -80,6 +81,8 @@ Screens never talk to the database directly. Every change goes through `TaskStor
 - **No accounts or tracking**: tasks stay on the device.
 - **Parameterised SQL queries**: text typed into a task can't be used to attack the database (no SQL injection).
 - **Locked-down notification receivers**: other apps can't trigger them.
+- **Read-only CI permissions**: the build pipeline can read the code but can't change it.
+- **Dependabot**: dependencies are checked weekly, and each update arrives as a pull request that CI tests. Security alerts and automatic security fixes are turned on.
 
 ## What's next
 
@@ -90,7 +93,7 @@ Screens never talk to the database directly. Every change goes through `TaskStor
 
 ## About this project
 
-I built TaskApp to plan my days and the weeks ahead in one place, and as a hands-on way to learn Flutter app development from start to finish. Along the way I practised structuring an app around a single source of state, storing data locally with SQLite, scheduling notifications, writing unit and widget tests, and running them automatically with GitHub Actions.
+I built Todolu to plan my days and the weeks ahead in one place, and as a hands-on way to learn Flutter app development from start to finish. Along the way I practised structuring an app around a single source of state, storing data locally with SQLite, scheduling notifications, writing unit and widget tests, and running them automatically with GitHub Actions.
 
 Feedback and suggestions are welcome. Feel free to open an issue.
 
