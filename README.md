@@ -2,6 +2,8 @@
 
 A Flutter task manager for Android and iOS, for planning what to do today and across the week. Tasks can be due on a specific day or "sometime this week", and they can repeat and send reminders. Everything is stored on the device.
 
+Website: [overwith.app](https://overwith.app) · [Privacy policy](https://overwith.app/privacy) · [Support](https://overwith.app/support)
+
 > **The source code is private.** This page shows the project's features, design and engineering approach. Code access is available on request.
 
 <p align="center">
@@ -18,7 +20,7 @@ A Flutter task manager for Android and iOS, for planning what to do today and ac
 - **Day or week tasks**: give a task a specific date, or just the week it belongs to.
 - **Repeating tasks**: when you tick off a daily or weekly task, the next copy is created automatically, with its reminder moved forward.
 - **Roll-forward**: unfinished tasks from past days move to today automatically, and "sometime this week" tasks move to the current week. Weekly tasks keep their weekday, and missed repeats don't pile up.
-- **Reminders**: local notifications at a time you choose. The app asks for notification permission the first time you turn one on.
+- **Reminders**: local notifications at a time you choose. The app asks for notification permission the first time you turn one on. On a locked phone set to hide sensitive content, the task name is hidden.
 - **Quick editing**: tap a task to edit it, tick it off with the checkbox, or swipe left to delete it (with Undo).
 - **Offline**: all data is saved in SQLite on the device. There's no account or server.
 - **Light and dark mode**, following the phone's setting.
@@ -68,7 +70,7 @@ Screens never talk to the database directly. Every change goes through `TaskStor
 
 ## Testing and quality
 
-- **67 automated tests** across four levels:
+- **68 automated tests** across four levels:
   - model rules (dates, recurrence, validation)
   - database queries against an in-memory SQLite database
   - store behaviour, including reminder scheduling with a fake scheduler
@@ -82,6 +84,8 @@ Screens never talk to the database directly. Every change goes through `TaskStor
 
 - **No network access**: the release build doesn't request internet permission.
 - **No accounts or tracking**: tasks stay on the device.
+- **Private lock-screen reminders**: the task name is hidden when the phone is set to hide sensitive content.
+- **Published privacy policy** at [overwith.app/privacy](https://overwith.app/privacy).
 - **Parameterised SQL queries**: text typed into a task can't be used to attack the database (no SQL injection).
 - **Locked-down notification receivers**: other apps can't trigger them.
 - **Read-only CI permissions**: the build pipeline can read the code but can't change it.
