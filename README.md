@@ -101,8 +101,6 @@ Screens never talk to the database directly. Every change goes through `TaskStor
 
 I built Overwith to plan my days and the weeks ahead in one place, and as a hands-on way to learn Flutter app development from start to finish. Along the way I practised structuring an app around a single source of state, storing data locally with SQLite, scheduling notifications, writing unit and widget tests, and running them automatically with GitHub Actions.
 
-Feedback and suggestions are welcome. Feel free to open an issue.
-
 ---
 
 © 2026 Bron222. All rights reserved. Screenshots and text on this page may not be reused without permission.
