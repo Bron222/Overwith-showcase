@@ -17,10 +17,12 @@ A Flutter task manager for Android and iOS, for planning what to do today and ac
 - **Week view**: flexible tasks for the week, then Monday to Sunday with today highlighted. Arrows move to any past or future week, one week at a time.
 - **Day or week tasks**: give a task a specific date, or just the week it belongs to.
 - **Repeating tasks**: when you tick off a daily or weekly task, the next copy is created automatically, with its reminder moved forward.
+- **Roll-forward**: unfinished tasks from past days move to today automatically, and "sometime this week" tasks move to the current week. Weekly tasks keep their weekday, and missed repeats don't pile up.
 - **Reminders**: local notifications at a time you choose. The app asks for notification permission the first time you turn one on.
 - **Quick editing**: tap a task to edit it, tick it off with the checkbox, or swipe left to delete it (with Undo).
 - **Offline**: all data is saved in SQLite on the device. There's no account or server.
 - **Light and dark mode**, following the phone's setting.
+- **About screen** with the open-source licenses of the packages the app uses.
 
 ## Tech stack
 
@@ -61,17 +63,18 @@ Screens never talk to the database directly. Every change goes through `TaskStor
 - **Reminders sit behind an interface.** The store depends on a `ReminderScheduler` interface rather than the notification plugin directly, so tests use a fake scheduler, and a notification failure can never stop a task from being saved.
 - **Reminders are rebuilt at every launch.** All scheduled reminders are cleared and recreated from the database on start-up, so they can't drift out of sync.
 - **Inexact alarms on Android.** Reminders may arrive a few minutes late, but the app avoids Google Play's restricted "exact alarm" permission.
+- **Missed tasks catch up once, not many times.** If a daily task is missed for three days, it shows up once today rather than three times. The check runs when the app opens and again when it comes back to the front, in case the day changed while it was open.
 - **Permissions are asked for in context.** Notification permission is requested the first time a reminder is turned on, not when the app launches.
 
 ## Testing and quality
 
-- **52 automated tests** across four levels:
+- **67 automated tests** across four levels:
   - model rules (dates, recurrence, validation)
   - database queries against an in-memory SQLite database
   - store behaviour, including reminder scheduling with a fake scheduler
   - widget tests that drive the real screens: adding, editing, deleting, ticking off and switching weeks
 - **Static analysis** with Flutter's recommended lint rules; the analyzer reports no issues.
-- **End-to-end tests** run the real app on an Android 36 emulator, with the real database and the real notification system. They add, tick off, edit and delete tasks, switch weeks, and restart the app to check that everything was saved. They also check that reminders are scheduled with Android and cancelled again. Testing caught a real crash before release: two "add" buttons conflicted during screen transitions.
+- **End-to-end tests** run the real app on an Android 36 emulator, with the real database and the real notification system. They add, tick off, edit and delete tasks, switch weeks, and restart the app to check that everything was saved. They also check that a task left over from an earlier day moves to today in the real database. They also check that reminders are scheduled with Android and cancelled again. Testing caught a real crash before release: two "add" buttons conflicted during screen transitions.
 - **Continuous integration** runs the analyzer and the unit and widget tests on every push and pull request. All changes go through pull requests that must pass CI.
 - **Checks before merging**: the analyzer, the unit and widget tests and the end-to-end tests must all pass before a change is merged into `main`. A pull request template keeps this checklist.
 
@@ -86,7 +89,6 @@ Screens never talk to the database directly. Every change goes through `TaskStor
 
 ## What's next
 
-- Move unfinished repeating tasks forward to today automatically
 - Build and test the iOS version
 - Add a custom app icon and a release signing key
 - Publish on Google Play and the App Store
