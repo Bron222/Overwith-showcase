@@ -1,4 +1,4 @@
-# Todolu
+# Overwith
 
 A Flutter task manager for Android and iOS, for planning what to do today and across the week. Tasks can be due on a specific day or "sometime this week", and they can repeat and send reminders. Everything is stored on the device.
 
@@ -95,7 +95,7 @@ Screens never talk to the database directly. Every change goes through `TaskStor
 
 ## About this project
 
-I built Todolu to plan my days and the weeks ahead in one place, and as a hands-on way to learn Flutter app development from start to finish. Along the way I practised structuring an app around a single source of state, storing data locally with SQLite, scheduling notifications, writing unit and widget tests, and running them automatically with GitHub Actions.
+I built Overwith to plan my days and the weeks ahead in one place, and as a hands-on way to learn Flutter app development from start to finish. Along the way I practised structuring an app around a single source of state, storing data locally with SQLite, scheduling notifications, writing unit and widget tests, and running them automatically with GitHub Actions.
 
 Feedback and suggestions are welcome. Feel free to open an issue.
 
