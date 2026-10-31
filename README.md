@@ -24,9 +24,9 @@ Website: [overwith.app](https://overwith.app) · [Privacy policy](https://overwi
 - **Roll-forward**: unfinished tasks from past days move to today automatically, and "sometime this week" tasks move to the current week. Weekly tasks keep their weekday, and missed repeats don't pile up. A small "from Mon" tag shows where a carried task started, and the app says how many came with you.
 - **Reminders**: local notifications at a time you choose. The app asks for notification permission the first time you turn one on. On a locked phone set to hide sensitive content, the task name is hidden.
 - **Quick editing**: tap a task to edit it, tick it off with the checkbox, or swipe left to delete it (with Undo).
-- **Sounds and messages**: a tick, a vibration and a cheeky message when you tick a task off, a ta-da when a list is finished, and a "nope" when you delete one. Sound can be turned off.
+- **Sounds and messages**: a pencil tick, a vibration and a cheeky message when you tick a task off, a ta-da when a list is finished, and a "nope" when you delete one. Sound can be turned off.
 - **Offline**: tasks are saved in SQLite and settings in the app's own storage, both on the device. There's no account or server.
-- **Dark and light mode**: dark by default, with a switch in the ⋮ menu.
+- **Dark and light mode**: dark by default, with a switch in the ⋮ menu. Light mode uses the website's warm paper background.
 - **Same look as the website**: the colours, fonts and check-mark logo of [overwith.app](https://overwith.app), also used as the app icon.
 - **Privacy & support screen**: the website's "We don't want your data" promise, a "things we know about you: 0" counter that won't go up however often you tap it, and links to the privacy policy, the help page and support email.
 - **About screen** with the tagline and the open-source licenses of the packages the app uses.
@@ -39,7 +39,7 @@ Website: [overwith.app](https://overwith.app) · [Privacy policy](https://overwi
 | UI | Material 3 |
 | State | `ChangeNotifier` and `InheritedNotifier` (built into Flutter, no extra package) |
 | Storage | SQLite via `sqflite` for tasks; `shared_preferences` for settings |
-| Sound | `audioplayers`, with sound files generated from the website's notes |
+| Sound | `audioplayers`, with sound files generated in code: the website's notes, plus a pencil tick made from shaped noise |
 | Links | `url_launcher`, opening the privacy policy, help page and support email in the phone's browser or email app |
 | Fonts | Bricolage Grotesque, Figtree and Caveat (SIL Open Font License), bundled with the app |
 | Notifications | `flutter_local_notifications` and `timezone` |
@@ -81,7 +81,7 @@ Screens never talk to the database directly. Every change goes through `TaskStor
 
 ## Testing and quality
 
-- **115 automated tests** across four levels:
+- **117 automated tests** across four levels:
   - model rules (dates, recurrence, moving tasks, validation)
   - database queries and upgrades against SQLite
   - store and settings behaviour, with a fake reminder scheduler and a fake sound player
