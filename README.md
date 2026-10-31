@@ -21,14 +21,15 @@ Website: [overwith.app](https://overwith.app) · [Privacy policy](https://overwi
 - **Finished tasks stay**, crossed out with a hand-drawn line, in both cards.
 - **Day or week tasks**: give a task a specific date, or just the week it belongs to.
 - **Repeating tasks**: when you tick off a daily or weekly task, the next copy is created automatically, with its reminder moved forward.
-- **Roll-forward**: unfinished tasks from past days move to today automatically, and "sometime this week" tasks move to the current week. Weekly tasks keep their weekday, and missed repeats don't pile up. A small "from Mon" tag shows where a carried task started.
+- **Roll-forward**: unfinished tasks from past days move to today automatically, and "sometime this week" tasks move to the current week. Weekly tasks keep their weekday, and missed repeats don't pile up. A small "from Mon" tag shows where a carried task started, and the app says how many came with you.
 - **Reminders**: local notifications at a time you choose. The app asks for notification permission the first time you turn one on. On a locked phone set to hide sensitive content, the task name is hidden.
 - **Quick editing**: tap a task to edit it, tick it off with the checkbox, or swipe left to delete it (with Undo).
 - **Sounds and messages**: a tick, a vibration and a cheeky message when you tick a task off, a ta-da when a list is finished, and a "nope" when you delete one. Sound can be turned off.
 - **Offline**: tasks are saved in SQLite and settings in the app's own storage, both on the device. There's no account or server.
 - **Dark and light mode**: dark by default, with a switch in the ⋮ menu.
 - **Same look as the website**: the colours, fonts and check-mark logo of [overwith.app](https://overwith.app), also used as the app icon.
-- **About screen** with the open-source licenses of the packages the app uses.
+- **Privacy & support screen**: the website's "We don't want your data" promise, a "things we know about you: 0" counter that won't go up however often you tap it, and links to the privacy policy, the help page and support email.
+- **About screen** with the tagline and the open-source licenses of the packages the app uses.
 
 ## Tech stack
 
@@ -39,6 +40,7 @@ Website: [overwith.app](https://overwith.app) · [Privacy policy](https://overwi
 | State | `ChangeNotifier` and `InheritedNotifier` (built into Flutter, no extra package) |
 | Storage | SQLite via `sqflite` for tasks; `shared_preferences` for settings |
 | Sound | `audioplayers`, with sound files generated from the website's notes |
+| Links | `url_launcher`, opening the privacy policy, help page and support email in the phone's browser or email app |
 | Fonts | Bricolage Grotesque, Figtree and Caveat (SIL Open Font License), bundled with the app |
 | Notifications | `flutter_local_notifications` and `timezone` |
 | Testing | `flutter_test` with `sqflite_common_ffi` for fast tests on a computer; `integration_test` for end-to-end tests on a real device |
@@ -79,13 +81,13 @@ Screens never talk to the database directly. Every change goes through `TaskStor
 
 ## Testing and quality
 
-- **106 automated tests** across four levels:
+- **115 automated tests** across four levels:
   - model rules (dates, recurrence, moving tasks, validation)
   - database queries and upgrades against SQLite
   - store and settings behaviour, with a fake reminder scheduler and a fake sound player
-  - widget tests that drive the real screens: adding, editing, deleting, ticking off, picking days and weeks, moving tasks, and the sound switch
+  - widget tests that drive the real screens: adding, editing, deleting, ticking off, picking days and weeks, moving tasks, the sound switch and the privacy & support screen
 - **Static analysis** with Flutter's recommended lint rules; the analyzer reports no issues.
-- **End-to-end tests** run the real app on an Android 36 emulator, with the real database and the real notification system. They add, tick off, edit and delete tasks, pick days and weeks, and restart the app to check that everything was saved. They also check that a task left over from an earlier day moves to today, with its "from" date, in the real database, and that reminders are scheduled with Android and cancelled again. Testing caught real problems before release: two "add" buttons that conflicted during screen transitions, and a sound library that kept redrawing the screen after every sound, which would have drained the battery.
+- **End-to-end tests** run the real app on an Android 36 emulator, with the real database and the real notification system. They add, tick off, edit and delete tasks, pick days and weeks, and restart the app to check that everything was saved. They also check that a task left over from an earlier day moves to today, with its "from" date, in the real database with a "came with you" message, that the Privacy & support screen opens, and that reminders are scheduled with Android and cancelled again. Testing caught real problems before release: two "add" buttons that conflicted during screen transitions, and a sound library that kept redrawing the screen after every sound, which would have drained the battery.
 - **Continuous integration** runs the analyzer and the unit and widget tests on every push and pull request. All changes go through pull requests that must pass CI.
 - **Checks before merging**: the analyzer, the unit and widget tests and the end-to-end tests must all pass before a change is merged into `main`. A pull request template keeps this checklist.
 
@@ -94,7 +96,7 @@ Screens never talk to the database directly. Every change goes through `TaskStor
 - **No network access**: the release build doesn't request internet permission.
 - **No accounts or tracking**: tasks stay on the device.
 - **Private lock-screen reminders**: the task name is hidden when the phone is set to hide sensitive content.
-- **Published privacy policy** at [overwith.app/privacy](https://overwith.app/privacy).
+- **Published privacy policy** at [overwith.app/privacy](https://overwith.app/privacy), also linked from the app's Privacy & support screen. Links open in the phone's browser, so the app itself still needs no internet permission.
 - **Parameterised SQL queries**: text typed into a task can't be used to attack the database (no SQL injection).
 - **Locked-down notification receivers**: other apps can't trigger them.
 - **Read-only CI permissions**: the build pipeline can read the code but can't change it.
