@@ -7,16 +7,16 @@ Website: [overwith.app](https://overwith.app) · [Privacy policy](https://overwi
 > **The source code is private.** This page shows the project's features, design and engineering approach. Code access is available on request.
 
 <p align="center">
-  <img src="screenshots/today.png" width="200" alt="Today screen">
+  <img src="screenshots/today.png" width="200" alt="Today screen in dark mode, the default">
   <img src="screenshots/day.png" width="200" alt="Another day picked from the day buttons">
   <img src="screenshots/edit-task.png" width="200" alt="Edit task form">
-  <img src="screenshots/today-dark.png" width="200" alt="Today screen in dark mode">
+  <img src="screenshots/today-light.png" width="200" alt="Today screen in light mode">
 </p>
 
 ## Features
 
 - **One screen**: Monday to Sunday buttons along the top, a card for the chosen day, and an amber card for "sometime this week" tasks. Each card has its own + button and a done count.
-- **Pick a day or a week**: tap a day button to see that day's tasks, and tap today's button to go back to Today. Arrows move a week at a time.
+- **Pick a day or a week**: tap a day button to see that day's tasks, and tap today's button to go back to Today. Arrows move a week at a time, and tapping the week name comes back to this week.
 - **Move in one tap**: "Later this week" moves a day task to the week card, and "Do it today" (or the chosen day) moves a week task to that day.
 - **Finished tasks stay**, crossed out with a hand-drawn line, in both cards.
 - **Day or week tasks**: give a task a specific date, or just the week it belongs to.
@@ -25,6 +25,7 @@ Website: [overwith.app](https://overwith.app) · [Privacy policy](https://overwi
 - **Reminders**: local notifications at a time you choose. The app asks for notification permission the first time you turn one on. On a locked phone set to hide sensitive content, the task name is hidden.
 - **Quick editing**: tap a task to edit it, tick it off with the checkbox, or swipe left to delete it (with Undo).
 - **Sounds and messages**: a pencil tick, a vibration and a cheeky message when you tick a task off, a ta-da when a list is finished, and a "nope" when you delete one. Sound can be turned off.
+- **Lots to say**: pop-ups when you tick, untick, add, move or delete a task, and when tasks carry over, each picked at random from a long list so they don't repeat. Empty cards get their own lines too, with special ones for Sundays.
 - **Offline**: tasks are saved in SQLite and settings in the app's own storage, both on the device. There's no account or server.
 - **Dark and light mode**: dark by default, with a switch in the ⋮ menu. Light mode uses the website's warm paper background.
 - **Same look as the website**: the colours, fonts and check-mark logo of [overwith.app](https://overwith.app), also used as the app icon.
@@ -78,14 +79,16 @@ Screens never talk to the database directly. Every change goes through `TaskStor
 - **Database upgrades keep every task.** Adding the "from Mon" tag needed a new column, so the database is versioned and upgrades in place. A test builds an old-version database and checks that its tasks survive.
 - **Sounds that stay out of the way.** Sounds play alongside music instead of pausing it, stay quiet when the phone is on silent, and can be turned off. They're generated from the same notes the website plays, so app and site sound alike.
 - **One design for app and website.** The colours, fonts and logo are shared, and the app's empty states and messages use the website's words.
+- **Messages that don't repeat.** Each kind of pop-up has many lines. They're shuffled into a bag and drawn until it's empty, so no line comes back until every other one has been shown, and the same line never shows twice in a row. Empty-card lines are tied to the date, so a card keeps its words all day instead of changing on every redraw.
 
 ## Testing and quality
 
-- **117 automated tests** across four levels:
+- **132 automated tests** across five levels:
   - model rules (dates, recurrence, moving tasks, validation)
   - database queries and upgrades against SQLite
   - store and settings behaviour, with a fake reminder scheduler and a fake sound player
-  - widget tests that drive the real screens: adding, editing, deleting, ticking off, picking days and weeks, moving tasks, the sound switch and the privacy & support screen
+  - the pop-up lines: no repeats until every line has been shown, and the right wording for one task or many
+  - widget tests that drive the real screens: adding, editing, deleting, ticking off, picking days and weeks, moving tasks, the sound switch, the privacy & support screen and the pop-ups
 - **Static analysis** with Flutter's recommended lint rules; the analyzer reports no issues.
 - **End-to-end tests** run the real app on an Android 36 emulator, with the real database and the real notification system. They add, tick off, edit and delete tasks, pick days and weeks, and restart the app to check that everything was saved. They also check that a task left over from an earlier day moves to today, with its "from" date, in the real database with a "came with you" message, that the Privacy & support screen opens, and that reminders are scheduled with Android and cancelled again. Testing caught real problems before release: two "add" buttons that conflicted during screen transitions, and a sound library that kept redrawing the screen after every sound, which would have drained the battery.
 - **Continuous integration** runs the analyzer and the unit and widget tests on every push and pull request. All changes go through pull requests that must pass CI.
